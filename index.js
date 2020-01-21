@@ -53,13 +53,15 @@ class ReconnectingSocket extends EventEmitter {
     if (opts.backoff.failAfter) this.backoff.failAfter(opts.backoff.failAfter - 1)
 
     this.backoff.on('backoff', (number, delay) => {
+      this._info(`backing off`)
       this.state = 'closed'
     })
     this.backoff.on('ready', (number, delay) => {
+      this._info(`done waiting`)
       this._reopen()
     })
     this.backoff.on('fail', () => {
-      this._info(`failed to connect after ${opts.backoff.failAfter} tries`)
+      this._info(`failed to connect after ${opts.backoff.failAfter} consecutive tries`)
       this._fail(
         this._lastError
       )
@@ -109,13 +111,21 @@ class ReconnectingSocket extends EventEmitter {
   }
 
   _destroySocket () {
-    if (!this.socket) return
+    if (!this.socket) {
+      this._info(`socket already destroyed`)
+      return
+    }
+    this._info(`destroying socket`)
     this.ondestroy(this.socket)
     this.socket = null
   }
 
   _createSocket () {
-    if (this.socket) return
+    if (this.socket) {
+      this._info(`socket already created`)
+      return
+    }
+    this._info(`creating new socket`)
     this.socket = this.oncreate(this, this._firstOpen)
   }
 
@@ -127,18 +137,21 @@ class ReconnectingSocket extends EventEmitter {
   }
 
   _reopen () {
+    this._info(`socket reopening`)
     this.state = 'reopening'
     this._destroySocket()
     this._createSocket()
   }
 
   start () {
+    this._info(`starting socket`)
     this.state = 'opening'
     this._firstOpen = true
     this._createSocket()
   }
 
   stop () {
+    this._info(`stopping socket`)
     this._destroySocket()
     this.backoff.reset()
     this.state = 'stopped'
@@ -146,13 +159,14 @@ class ReconnectingSocket extends EventEmitter {
 
   didOpen () {
     this.state = 'opened'
+    this._info(`socket ${this._firstOpen ? 'opened' : 'reopened'}`)
     this.onopen(this.socket, this._firstOpen)
     if (this._firstOpen) this._firstOpen = false
     this.backoff.reset()
   }
 
   didClose () {
-    this._info('reconnecting-socket: socket closed')
+    this._info('socket closed')
     this.onclose(this.socket)
     this.backoff.backoff()
   }
@@ -160,9 +174,9 @@ class ReconnectingSocket extends EventEmitter {
   didError (err) {
     if (['opening', 'reopening'].some(state => this.state === state)) {
       const backoffNumber = this.backoff.backoffNumber_
-      this._info(`reconnecting-socket: Error durning open attempt ${backoffNumber}`)
+      this._info(`Error durning open attempt ${backoffNumber}`)
     }
-    this._error(new Error(err))
+    this._error(err)
   }
 }
 
