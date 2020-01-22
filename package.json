@@ -7,8 +7,7 @@
     "url": "https://github.com/bcomnes/reconnecting-socket/issues"
   },
   "dependencies": {
-    "backoff": "^2.5.0",
-    "nanoassert": "^2.0.0"
+    "backoff": "^2.5.0"
   },
   "devDependencies": {
     "dependency-check": "^4.1.0",

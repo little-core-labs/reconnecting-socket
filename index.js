@@ -117,7 +117,6 @@ class ReconnectingSocket extends EventEmitter {
     }
     this._info(`destroying socket`)
     this.ondestroy(this.socket)
-    this.socket = null
   }
 
   _createSocket () {
@@ -168,7 +167,8 @@ class ReconnectingSocket extends EventEmitter {
   didClose () {
     this._info('socket closed')
     this.onclose(this.socket)
-    this.backoff.backoff()
+    this.socket = null
+    if (this.state !== 'stopped') this.backoff.backoff()
   }
 
   didError (err) {

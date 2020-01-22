@@ -3,7 +3,7 @@ const Socket = require('simple-websocket')
 
 const rsws = new ReconnectingSocket({
   backoff: {
-    failAfter: 3
+    failAfter: null
   },
   oncreate () {
     // Creating the new socket and return it
