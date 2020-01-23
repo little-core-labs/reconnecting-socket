@@ -2,7 +2,7 @@ const tap = require('tap')
 const ReconnectingSocket = require('./index')
 const net = require('net')
 
-tap.test('a test', t => {
+tap.test('yolo hook it all up test', t => {
   t.plan(16)
   const connections = []
   const server = net.createServer((socket) => {

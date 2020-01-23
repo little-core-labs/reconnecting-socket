@@ -118,6 +118,8 @@ Create a new reconnecting socket instance.  The `opts` object can receive the us
 }
 ```
 
+See full set of backoff options here: [MathieuTurcotte/node-backoff](https://github.com/MathieuTurcotte/node-backoff#readme)
+
 #### `reconnectingSocket` Events
 
 - `state`: The state emmits the following `state` strings:
@@ -166,6 +168,10 @@ This method is called when the `this.close()` method is called.  Use this to cle
 ### `reconnectingSocket.onfail(err)`
 
 This method is called when the reconnectignSocket fails to connect after `failAfter` concecutive attempts.  It receives the last error emitted by the various moving parts.
+
+## See also
+
+- [reconnecting-simple-websocket](https://github.com/little-core-labs/reconnecting-simple-websocket)
 
 ## License
 
