@@ -131,11 +131,11 @@ Create a new reconnecting socket instance.  The `opts` object can receive the us
 - `info`: Messages that can be used for debugging.
 - `error`: Errors emitted by the socket or internally.  For an error handling path, see `reconnectingSocket.onfail(err)`.
 
-### reconnectingSocket.start()
+### `reconnectingSocket.start()`
 
 Start the reconnecting socket.
 
-### reconnectingSocket.stop()
+### `reconnectingSocket.stop()`
 
 Stop the reconnecting socket.
 
