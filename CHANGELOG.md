@@ -4,5 +4,5 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
-## 1.0.0 - {{date}}
-* ...
+## 1.0.0 - 2020-01-22
+* intit
