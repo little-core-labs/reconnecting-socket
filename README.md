@@ -1,5 +1,5 @@
 # reconnecting-socket
-[![Actions Status](https://github.com/bcomnes/reconnecting-socket/workflows/tests/badge.svg)](https://github.com/bcomnes/reconnecting-socket/actions)
+[![Actions Status](https://github.com/little-core-labs/reconnecting-socket/workflows/tests/badge.svg)](https://github.com/little-core-labs/reconnecting-socket/actions)
 
 Generic state machine for sockets.  Provides granular state handling, and start/stop functionality.
 
