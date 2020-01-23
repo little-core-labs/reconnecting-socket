@@ -50,16 +50,16 @@ tap.test('a test', t => {
     backoff: {
       failAfter: 4
     },
-    oncreate () {
+    create () {
       const socket = new net.Socket()
-      socket.on('close', this.didClose)
-      socket.on('error', this.didError)
-      socket.on('connect', this.didOpen)
+      socket.on('close', this.close)
+      socket.on('error', this.error)
+      socket.on('connect', this.open)
       socket.connect(8124)
 
       return socket
     },
-    ondestroy (socket) {
+    destroy (socket) {
       socket.destroy()
     },
     onopen (socket, firstOpen) {

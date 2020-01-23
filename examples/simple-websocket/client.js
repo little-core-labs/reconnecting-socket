@@ -5,19 +5,19 @@ const rsws = new ReconnectingSocket({
   backoff: {
     failAfter: null
   },
-  oncreate () {
+  create () {
     // Creating the new socket and return it
     // Be sure to notify for connection event, close event, and error event
     var socket = new Socket('ws://localhost:8456')
 
-    socket.once('connect', this.didOpen)
-    socket.once('close', this.didClose)
-    socket.once('error', this.didError)
+    socket.once('connect', this.open)
+    socket.once('close', this.close)
+    socket.once('error', this.error)
 
     return socket
   },
 
-  ondestroy (socket) {
+  destroy (socket) {
     // what gets called when a request to destroy the socket.
     // destroy the socket here
     socket.destroy()

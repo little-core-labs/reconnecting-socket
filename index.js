@@ -13,8 +13,8 @@ class ReconnectingSocket extends EventEmitter {
   constructor (opts) {
     opts = Object.assign({
       name: 'rs-' + Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1)
-      // oncreate: (ctx) => throw new Error('oncreate not implemented'),
-      // ondestroy: (ctx) => throw new Error('ondestroy not implemented'),
+      // create: (ctx) => throw new Error('create not implemented'),
+      // destroy: (ctx) => throw new Error('destroy not implemented'),
       // onerror: (err, ctx) => throw new Error('onerror not implemented')
       // onclose: (err, ctx) => throw new Error('onclose not implemented')
     }, opts)
@@ -31,15 +31,15 @@ class ReconnectingSocket extends EventEmitter {
 
     this.socket = null
 
-    if (opts.oncreate) this.oncreate = opts.oncreate
+    if (opts.create) this.create = opts.create
     if (opts.onopen) this.onopen = opts.onopen
-    if (opts.ondestroy) this.ondestroy = opts.ondestroy
+    if (opts.destroy) this.destroy = opts.destroy
     if (opts.onclose) this.onclose = opts.onclose
     if (opts.onfail) this.onfail = opts.onfail
 
-    // assert(typeof this.oncreate === 'function', 'oncreate must be implemented')
+    // assert(typeof this.create === 'function', 'create must be implemented')
     // assert(typeof this.onconnect === 'function', 'onconnect must be implemented')
-    // assert(typeof this.ondestroy === 'function', 'ondestroy must be implemented')
+    // assert(typeof this.destroy === 'function', 'destroy must be implemented')
     // assert(typeof this.onfail === 'function', 'onfail must be implemented')
     // assert(typeof this.onclose === 'function', 'onclose must be implemented')
 
@@ -67,29 +67,29 @@ class ReconnectingSocket extends EventEmitter {
       )
     })
 
-    this.didOpen = this.didOpen.bind(this)
-    this.didClose = this.didClose.bind(this)
-    this.didError = this.didError.bind(this)
+    this.open = this.open.bind(this)
+    this.close = this.close.bind(this)
+    this.error = this.error.bind(this)
   }
 
-  oncreate () {
-    // overwrite me
+  create () {
+    throw new Error('implement me!')
   }
 
-  onopen (socket, reopened) {
-    // overwrite me
+  onopen (socket, firstOpen) {
+    throw new Error('implement me!')
   }
 
-  ondestroy (socket) {
-    // overwrite me
+  destroy (socket) {
+    throw new Error('implement me!')
   }
 
   onclose (socket) {
-    // overwrite me
+    throw new Error('implement me!')
   }
 
   onfail (err) { // eslint-disable-line handle-callback-err
-    // overwrite me
+    throw new Error('implement me!')
   }
 
   get state () {
@@ -116,7 +116,7 @@ class ReconnectingSocket extends EventEmitter {
       return
     }
     this._info(`destroying socket`)
-    this.ondestroy(this.socket)
+    this.destroy(this.socket)
   }
 
   _createSocket () {
@@ -125,7 +125,7 @@ class ReconnectingSocket extends EventEmitter {
       return
     }
     this._info(`creating new socket`)
-    this.socket = this.oncreate(this, this._firstOpen)
+    this.socket = this.create(this, this._firstOpen)
   }
 
   _fail (err) {
@@ -156,7 +156,7 @@ class ReconnectingSocket extends EventEmitter {
     this.state = 'stopped'
   }
 
-  didOpen () {
+  open () {
     this.state = 'opened'
     this._info(`socket ${this._firstOpen ? 'opened' : 'reopened'}`)
     this.onopen(this.socket, this._firstOpen)
@@ -164,14 +164,14 @@ class ReconnectingSocket extends EventEmitter {
     this.backoff.reset()
   }
 
-  didClose () {
+  close () {
     this._info('socket closed')
     this.onclose(this.socket)
     this.socket = null
     if (this.state !== 'stopped') this.backoff.backoff()
   }
 
-  didError (err) {
+  error (err) {
     if (['opening', 'reopening'].some(state => this.state === state)) {
       const backoffNumber = this.backoff.backoffNumber_
       this._info(`Error durning open attempt ${backoffNumber}`)
