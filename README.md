@@ -139,9 +139,9 @@ Start the reconnecting socket.
 
 Stop the reconnecting socket.
 
-#### User Implemented Methods
+## User Implemented Methods
 
-##### `socket = reconnectingSocket.create()`
+### `socket = reconnectingSocket.create()`
 
 Implement the `.create` method that is run when a new socket should be created.  The method should return a `socket`, and attatch listeners or callbacks to trigger the following methods:
 
@@ -151,19 +151,19 @@ Implement the `.create` method that is run when a new socket should be created. 
 
 The returned socket will be passed to various other hooks and events.
 
-##### `reconnectingSocket.destroy(socket)`
+### `reconnectingSocket.destroy(socket)`
 
 The body of this method should destroy the socket (e.g. `socket.destroy()`).  This is called when `reconnectingSocket.stop()` is called.
 
-##### `reconnectingSocket.onopen(socket, firstOpen)`
+### `reconnectingSocket.onopen(socket, firstOpen)`
 
 This method is called whenever a new socket is created and the `this.open()` method has been called, so the socket should be live and ready for data.  It receives the `socket` as well as `firstOpen` boolean which indicates if this is the first successful connection since calling `reconnectingSocket.start()`.  Interact with the socket in this function body.
 
-##### `reconnectingSocket.onclose(socket)`
+### `reconnectingSocket.onclose(socket)`
 
 This method is called when the `this.close()` method is called.  Use this to clean up any event listeners or intervals used on the socket.
 
-##### `reconnectingSocket.onfail(err)`
+### `reconnectingSocket.onfail(err)`
 
 This method is called when the reconnectignSocket fails to connect after `failAfter` concecutive attempts.  It receives the last error emitted by the various moving parts.
 
