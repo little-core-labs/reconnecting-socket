@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "author": "Bret Comnes <bcomnes@gmail.com> (https://bret.io)",
   "bugs": {
-    "url": "https://github.com/bcomnes/reconnecting-socket/issues"
+    "url": "https://github.com/little-core-labs/reconnecting-socket/issues"
   },
   "dependencies": {
     "backoff": "^2.5.0"
@@ -16,13 +16,13 @@
     "standard": "^13.1.0",
     "tap": "^14.10.2"
   },
-  "homepage": "https://github.com/bcomnes/reconnecting-socket",
+  "homepage": "https://github.com/little-core-labs/reconnecting-socket",
   "keywords": [],
   "license": "MIT",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bcomnes/reconnecting-socket.git"
+    "url": "https://github.com/little-core-labs/reconnecting-socket.git"
   },
   "scripts": {
     "test": "run-s test:*",
