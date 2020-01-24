@@ -32,8 +32,8 @@ class ReconnectingSocket extends EventEmitter {
     this.socket = null
 
     if (opts.create) this.create = opts.create
-    if (opts.onopen) this.onopen = opts.onopen
     if (opts.destroy) this.destroy = opts.destroy
+    if (opts.onopen) this.onopen = opts.onopen
     if (opts.onclose) this.onclose = opts.onclose
     if (opts.onfail) this.onfail = opts.onfail
 
@@ -76,20 +76,20 @@ class ReconnectingSocket extends EventEmitter {
     throw new Error('implement me!')
   }
 
-  onopen (socket, firstOpen) {
-    throw new Error('implement me!')
-  }
-
   destroy (socket) {
     throw new Error('implement me!')
   }
 
-  onclose (socket) {
-    throw new Error('implement me!')
+  onopen (socket, firstOpen) {
+    // optional
   }
 
-  onfail (err) { // eslint-disable-line handle-callback-err
-    throw new Error('implement me!')
+  onclose (socket) {
+    this._info('onclose method not implemented')
+  }
+
+  onfail (err) {
+    this._info(`failed: ${err.message}`)
   }
 
   get state () {
@@ -103,7 +103,6 @@ class ReconnectingSocket extends EventEmitter {
 
   _error (err) {
     this._lastError = err
-    this.emit('error', err)
   }
 
   _info (info) {
@@ -129,16 +128,13 @@ class ReconnectingSocket extends EventEmitter {
   }
 
   _fail (err) {
-    this._destroySocket()
     this.state = 'fail'
     this.onfail(err)
-    this._error(err)
   }
 
   _reopen () {
     this._info(`socket reopening`)
     this.state = 'reopening'
-    this._destroySocket()
     this._createSocket()
   }
 

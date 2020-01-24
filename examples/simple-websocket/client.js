@@ -44,7 +44,6 @@ const rsws = new ReconnectingSocket({
 })
 
 rsws.on('info', str => console.log(`info: ${str}`)) // indiciate state with these.
-rsws.on('state', str => console.log(`state: ${str}`)) // Better just to read these than trigger other code paths
-rsws.on('error', str => console.error(`error: ${str}`))
+rsws.on('state', str => console.log(`state: ${str}`)) // Better just to read these than trigger other code path
 
 rsws.start() // start it

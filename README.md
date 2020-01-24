@@ -1,7 +1,7 @@
 # reconnecting-socket
 [![Actions Status](https://github.com/little-core-labs/reconnecting-socket/workflows/tests/badge.svg)](https://github.com/little-core-labs/reconnecting-socket/actions)
 
-Generic state machine for sockets.  Provides granular state handling, and start/stop functionality.
+Generic state machine for sockets.  Provides granular state handling, and start/stop functionality.  Decouples socket creation and destruction in tandem with reconnect, start and stop logic, from what the socket is acually doing.
 
 ```
 npm install reconnecting-socket
@@ -19,14 +19,19 @@ const reconnectingTCP = new ReconnectingSocket({
   },
   create () {
     const socket = new net.Socket()
-    socket.on('close', this.close)
-    socket.on('error', this.error)
-    socket.on('connect', this.open)
+    // You are also free to redirect this info.
+    // Indicate the socket is exausted/failed/done.
+    socket.once('close', this.close)
+    // Capture errors.  The last one will be availabl in onfail
+    socket.once('error', this.error)
+    // Notify the socket is open/connected/ready for use
+    socket.once('connect', this.open)
     socket.connect(8124)
 
     return socket
   },
   destroy (socket) {
+    // Clean up and stop a socket when reconnectingTCP.stop() is called
     socket.destroy()
   },
   onopen (socket, firstOpen) {
@@ -44,9 +49,6 @@ const reconnectingTCP = new ReconnectingSocket({
 
 // Hook reactive UIs to these events
 reconnectingTCP.on('info', console.log) // debugging info
-reconnectingTCP.on('error', err => {
-  console.error(err)
-})
 reconnectingTCP.on('state', console.log) // state inof
 ```
 
@@ -129,9 +131,8 @@ See full set of backoff options here: [MathieuTurcotte/node-backoff](https://git
   - `closing`
   - `closed`
   - `reopening`
-  - `fail`
+  - `failed`
 - `info`: Messages that can be used for debugging.
-- `error`: Errors emitted by the socket or internally.  For an error handling path, see `reconnectingSocket.onfail(err)`.
 
 ### `reconnectingSocket.start()`
 
@@ -148,8 +149,8 @@ Stop the reconnecting socket.
 Implement the `.create` method that is run when a new socket should be created.  The method should return a `socket`, and attatch listeners or callbacks to trigger the following methods:
 
 - `this.open()`: Called when the socket is connected or ready.
-- `this.error(err)`: Called when the socket encounters an error.  This can be forwarded to the reconnecting socket emitter.
-- `this.close()`: Called when the socket is fully closed or exausted.
+- `this.error(err)`: Called when the socket encounters an error.  Used to capture the last error emited to be returned onfail.
+- `this.close()`: Called when the socket is fully closed or exausted.  This triggers the reconnect.
 
 The returned socket will be passed to various other hooks and events.
 

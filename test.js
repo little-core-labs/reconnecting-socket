@@ -3,7 +3,7 @@ const ReconnectingSocket = require('./index')
 const net = require('net')
 
 tap.test('yolo hook it all up test', t => {
-  t.plan(16)
+  t.plan(9)
   const connections = []
   const server = net.createServer((socket) => {
     console.log('client connected')
@@ -83,9 +83,6 @@ tap.test('yolo hook it all up test', t => {
   })
 
   reconnectingTCP.on('info', console.log)
-  reconnectingTCP.on('error', err => {
-    t.equals(err.message, 'connect ECONNREFUSED 127.0.0.1:8124', 'can\'t connect message looks good')
-  })
 
   server.listen(8124, () => {
     console.log('server started')
