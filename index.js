@@ -153,16 +153,16 @@ class ReconnectingSocket extends EventEmitter {
   }
 
   open () {
+    this.onopen(this.socket, this._firstOpen)
     this.state = 'opened'
     this._info(`socket ${this._firstOpen ? 'opened' : 'reopened'}`)
-    this.onopen(this.socket, this._firstOpen)
     if (this._firstOpen) this._firstOpen = false
     this.backoff.reset()
   }
 
   close () {
-    this._info('socket closed')
     this.onclose(this.socket)
+    this._info('socket closed')
     this.socket = null
     if (this.state !== 'stopped') this.backoff.backoff()
   }
